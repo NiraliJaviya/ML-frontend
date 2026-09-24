@@ -1,0 +1,79 @@
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  Grid,
+  IconButton,
+  Stack,
+  Typography,
+} from "@mui/material";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
+import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
+import RiskChip from "../Common/RiskChip";
+import { formatCurrency, formatDateTime, formatPercent } from "../../utils/formatters";
+
+const PredictionDetailsDialog = ({ record, open, onClose }) => {
+  if (!record) return null;
+
+  return (
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+      <DialogTitle sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <span>{record.id}</span>
+        <IconButton onClick={onClose} aria-label="Close details dialog" size="small">
+          <CloseRoundedIcon />
+        </IconButton>
+      </DialogTitle>
+      <DialogContent dividers>
+        <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 3 }}>
+          <RiskChip level={record.riskLevel} />
+          <Stack direction="row" spacing={0.5} alignItems="center">
+            {record.prediction === 1 ? (
+              <CancelRoundedIcon color="error" fontSize="small" />
+            ) : (
+              <CheckCircleRoundedIcon color="success" fontSize="small" />
+            )}
+            <Typography variant="body2">{record.prediction === 1 ? "Default" : "No Default"}</Typography>
+          </Stack>
+        </Stack>
+
+        <Grid container spacing={2.5}>
+          <Grid size={6}>
+            <Typography variant="caption" color="text.secondary">
+              Date
+            </Typography>
+            <Typography variant="subtitle2">{formatDateTime(record.date)}</Typography>
+          </Grid>
+          <Grid size={6}>
+            <Typography variant="caption" color="text.secondary">
+              Risk Probability
+            </Typography>
+            <Typography variant="subtitle2">{formatPercent(record.defaultProbability)}</Typography>
+          </Grid>
+          <Grid size={6}>
+            <Typography variant="caption" color="text.secondary">
+              Loan Amount
+            </Typography>
+            <Typography variant="subtitle2">{formatCurrency(record.loanAmount)}</Typography>
+          </Grid>
+          <Grid size={6}>
+            <Typography variant="caption" color="text.secondary">
+              Credit Score
+            </Typography>
+            <Typography variant="subtitle2">{record.creditScore}</Typography>
+          </Grid>
+        </Grid>
+
+        <Divider sx={{ my: 3 }} />
+
+        <Typography variant="caption" color="text.secondary">
+          This record was generated from mock history data and will reflect real stored predictions
+          once the backend and database are connected.
+        </Typography>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default PredictionDetailsDialog;
