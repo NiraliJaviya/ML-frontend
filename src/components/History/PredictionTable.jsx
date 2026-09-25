@@ -23,10 +23,10 @@ import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import VisibilityRoundedIcon from "@mui/icons-material/VisibilityRounded";
 import RiskChip from "../Common/RiskChip";
 import EmptyState from "../Common/EmptyState";
-import { formatCurrency, formatDate, formatPercent } from "../../utils/formatters";
+import { formatCurrency, formatPercent } from "../../utils/formatters";
 
 const columns = [
-  { id: "date", label: "Date", sortable: true },
+  { id: "id", label: "Application ID", sortable: true },
   { id: "loanAmount", label: "Loan Amount", sortable: true },
   { id: "creditScore", label: "Credit Score", sortable: true },
   { id: "defaultProbability", label: "Risk Probability", sortable: true },
@@ -40,7 +40,7 @@ const riskFilterOptions = ["All", "Low", "Moderate", "High"];
 const PredictionTable = ({ records, onViewRecord }) => {
   const [search, setSearch] = useState("");
   const [riskFilter, setRiskFilter] = useState("All");
-  const [orderBy, setOrderBy] = useState("date");
+  const [orderBy, setOrderBy] = useState("loanAmount");
   const [order, setOrder] = useState("desc");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -160,8 +160,7 @@ const PredictionTable = ({ records, onViewRecord }) => {
                 {paginatedRecords.map((record) => (
                   <TableRow key={record.id} hover>
                     <TableCell>
-                      <Typography variant="body2">{formatDate(record.date)}</Typography>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
                         {record.id}
                       </Typography>
                     </TableCell>
