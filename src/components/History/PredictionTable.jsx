@@ -45,6 +45,15 @@ const PredictionTable = ({ records, onViewRecord }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  const normalizedRecords = useMemo(
+    () =>
+      records.map((record, index) => ({
+        ...record,
+        id: record.id ?? record.applicationId ?? `APP-${String(index + 1).padStart(4, "0")}`,
+      })),
+    [records]
+  );
+
   const handleSort = (columnId) => {
     const isAsc = orderBy === columnId && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -52,7 +61,7 @@ const PredictionTable = ({ records, onViewRecord }) => {
   };
 
   const filteredRecords = useMemo(() => {
-    let result = records;
+    let result = normalizedRecords;
 
     if (riskFilter !== "All") {
       result = result.filter((record) => record.riskLevel === riskFilter);
@@ -60,7 +69,7 @@ const PredictionTable = ({ records, onViewRecord }) => {
 
     if (search.trim()) {
       const query = search.trim().toLowerCase();
-      result = result.filter((record) => record.id.toLowerCase().includes(query));
+      result = result.filter((record) => String(record.id).toLowerCase().includes(query));
     }
 
     const sorted = [...result].sort((a, b) => {
@@ -72,7 +81,7 @@ const PredictionTable = ({ records, onViewRecord }) => {
     });
 
     return sorted;
-  }, [records, search, riskFilter, orderBy, order]);
+  }, [normalizedRecords, search, riskFilter, orderBy, order]);
 
   const paginatedRecords = filteredRecords.slice(
     page * rowsPerPage,
